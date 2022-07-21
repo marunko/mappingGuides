@@ -17,34 +17,14 @@ public class UserDao {
 	@PersistenceContext
 	private EntityManager em;
 	
-	@Autowired
-	ForTransactionTest testT;
-	
+	 
 	public User_App getUser() {
 		  
 		return em.find(User_App.class, 1L);
 	}
 	
+ 
 	
-	@Transactional(propagation=Propagation.REQUIRED)
-	public void tra1() {
-		  
-		System.out.println(TransactionSynchronizationManager.getCurrentTransactionName());
-		testT.tra2();
-	}
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	protected void tra2() {
-		  
-		System.out.println(TransactionSynchronizationManager.getCurrentTransactionName() + " "+TransactionSynchronizationManager.isActualTransactionActive());
-	}
 	
 }
-@Component
-class ForTransactionTest{
-	
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	protected void tra2() {
-		  
-		System.out.println(TransactionSynchronizationManager.getCurrentTransactionName() + " "+TransactionSynchronizationManager.isActualTransactionActive());
-	}
-}
+ 

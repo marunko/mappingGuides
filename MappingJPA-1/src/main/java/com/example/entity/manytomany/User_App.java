@@ -10,13 +10,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.JoinColumn;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name="User")
 @Table(name="user")
-@Data
+@Getter
+@Setter
 public class User_App {
 
 	@Id
@@ -37,6 +43,7 @@ public class User_App {
 			  name = "user_role", 
 			  joinColumns = @JoinColumn(name = "user_id"), 
 			  inverseJoinColumns = @JoinColumn(name = "role_id"))
+	 
 	private Set<Role_App> roles;
 	
 }

@@ -73,7 +73,7 @@ public class TestDao {
 		Tester t = entityManger.find(Tester.class, id);
 		
 		entityManger.remove(t);
-		entityManger.flush();
+		//entityManger.flush();
 		entityManger.close();
 	}
 }

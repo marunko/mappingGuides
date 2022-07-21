@@ -12,11 +12,17 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name="Role")
 @Table(name="role")
-@Data
+@Getter
+@Setter
 public class Role_App {
 
 	@Id
@@ -26,6 +32,7 @@ public class Role_App {
 	@Column(name="name")
 	private String name;
 	
-	@ManyToMany(mappedBy="roles", fetch=FetchType.EAGER)
+	@ManyToMany(mappedBy="roles", fetch=FetchType.LAZY)
+	@JsonIgnore
 	private Set<User_App> users = new HashSet<>();
 }

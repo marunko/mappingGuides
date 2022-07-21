@@ -1,6 +1,7 @@
 package com.example.dao;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,51 +79,97 @@ public class JobDao {
 	public Department getDepartmentByName(String name){
 		
 		Query query = em.createQuery("SELECT d FROM Department d "
-				+ " LEFT JOIN FETCH WHERE d.name LIKE :name");
+				+ "WHERE d.name LIKE :name");
 		query.setParameter("name", name);
 		 
 		 
 		Department department = (Department) query.getSingleResult();
-		//department.setEmployees(Set.copyOf(getEmployeesByDepartment(name)));
-		 //Hibernate.initialize(department.getEmployees());
-		em.close();
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
+		// may extract ID and NAME
+		 // impossible to extract department.getEmployees(); due to ResultSet format
+		/// Use like Map<Department, List<Employee>> 
+		
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		return department;			
 	}
 	@Transactional
 	public Department getDepartmentById(Long id){
 		Department dep = em.find(Department.class, id);
-		dep.setEmployees(Set.copyOf(getEmployeesByDepartment("finanace")));
-		 System.out.println(dep.getEmployees().size());
+		// dep.setEmployees(Set.copyOf(getEmployeesByDepartment("finanace")));
+		 // System.out.println(dep.getEmployees().size());
 		/*for(Employee e : dep.getEmployees())
 			Hibernate.initialize(e);*/
 		return dep;
 	}
 	
 	@Transactional
-	public Map<Department, List<Employee>> getDepartments(){
-		 return null;
-			
+	public List<Department> getAllDepartments(){
+		// USE DTO typical Entity
+		Query query 
+	      = em.createQuery( " FROM Department d ");  
+		return query.getResultList();
 	}
+	
+	
+	@Transactional
+	public Map<Department, List<Employee>> getDepartments(){
+		// USE DTO typical Entity cause Result set Error
+		Map<Department, List<Employee>> m = new HashMap<>();
+		 List<Department> list = getAllDepartments();
+		 for(Department d : list) {
+			 m.put(d, getEmployeesByDepartment(d.getName()));
+		 }
+		 
+		 return m;		
+	}
+	
 	@Transactional
 	public Employee saveEmployee(Employee employee, String departmentName){
-		Department department = null;
-		if(departmentName != null)
-			department = this.getDepartmentByName(departmentName);
+		 /*
+		  * Except department as JSON id + name
+		  * 
+		  * 
+		  * */
+		Employee e = new Employee();
+		e.setName(employee.getName());
+		e.setAge(employee.getAge());
+		e.setSalary(employee.getSalary());
+		e.setDepartment(employee.getDepartment());
 		
-		employee.setDepartment(department);	
-		em.persist(employee);
+		em.persist(e);
+		//Employee empl = getEmployee1(e.getId());
 		em.flush();
 		em.close();
 		
-		return getEmployee1(employee.getId());
+		return e;
+	}
+	@Transactional
+	public Employee updateEmployee(Employee employee, String departmentName, long id){
+		 
+		 
+		Employee e = em.find(Employee.class, id);
+		e.setName(employee.getName());
+		e.setAge(employee.getAge());
+		e.setSalary(employee.getSalary());
+		e.setDepartment(employee.getDepartment());
+		
+		em.merge(e);
+		//Employee empl = getEmployee1(e.getId());
+		em.flush();
+		em.close();
+		
+		return e;
 	}
 	 
-	
-	// Save persist
-	
-	// Update persist
-	
-	// Remove persist
+	@Transactional 
+	public void removeEmployee(long id) {
+		
+		Employee e = em.find(Employee.class, id);
+		em.remove(e);
+		em.close();
+	}
+ 
 	
 	
 }

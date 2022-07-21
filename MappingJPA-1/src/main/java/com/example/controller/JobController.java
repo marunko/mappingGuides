@@ -50,8 +50,24 @@ public class JobController {
 	
 	@PostMapping("/employee/create")
 	public ResponseEntity<String> createOne(@RequestBody Employee employee, @RequestParam String department){
-		// dao.saveEmployee(employee, department);
-		String str = employee.getName() +"\n"+ employee.getSalary()+"\n" + department;
+		Employee e =  dao.saveEmployee(employee, department);
+		String str = e.getName() + " " + e.getAge() + " "+ e.getSalary() +
+				" ";//+e.getDepartment().getName();
+		return new ResponseEntity<>(str, HttpStatus.OK);
+	}
+	@PostMapping("/employee/remove")
+	public ResponseEntity<String> removeOne(@RequestParam long id){
+		 dao.removeEmployee(id);
+		
+		return new ResponseEntity<>( HttpStatus.OK);
+	}
+	@PostMapping("/employee/update")
+	public ResponseEntity<String> updateOne(@RequestBody Employee employee, @RequestParam String name, 
+			@RequestParam long id){
+		
+		Employee e = dao.updateEmployee(employee, name, id);
+		String str = e.getName() + " " + e.getAge() + " "+ e.getSalary() +
+				" ";//+e.getDepartment().getName();
 		return new ResponseEntity<>(str, HttpStatus.OK);
 	}
 }
