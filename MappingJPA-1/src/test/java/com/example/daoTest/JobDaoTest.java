@@ -3,6 +3,7 @@ package com.example.daoTest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -66,19 +67,15 @@ public class JobDaoTest {
 	@Test
 	@Transactional
 	public void getEmployeeByDepName() {
-		 //List<Employee> e = jobDao.getEmployeesByDepartment("finanace");
-		
-		// e.forEach(x->System.out.println(x.getName()));
-		 Department d = em.find(Department.class, 1L);
-		 //Hibernate.initialize(d.getEmployees());
-		 List<String> names = d.getEmployees().stream().map((s)->
-		 {
-			 //Hibernate.initialize(s);
-			 System.out.println(s.getName());
-		 return s.getName();
-		 }).toList();
-		
-		 names.forEach(System.out::println);
+		// em.createQuery(" from Employee e").getResultList().forEach(x->System.out.println(x));
+		// List<Department> l = em.<Department>createQuery(" from Department d").getResultList();
+		// l.forEach(x->System.out.println(x.toString()));
+		 
+		 List<Employee> ess = em.createQuery("select e from Employee e JOIN FETCH e.department d where "
+		 		+ "d.id = 1").getResultList();
+		  
+		 ess.forEach(x->System.out.println(x.getName()));
+		   
 	}
 	 
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.dao.TestDao;
+import com.example.entity.tester.Tester;
 
 @SpringBootTest
 public class TesterDaoTest {
@@ -14,8 +15,9 @@ public class TesterDaoTest {
 	
 	@Test
 	public void getListTester() {
-		
-		System.out.println(ts.getTesterByName("1111111"));
+		var t = new Tester();
+		t.setName("COCO");
+		ts.createTester(t);
 	}
 	
 }

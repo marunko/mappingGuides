@@ -16,15 +16,14 @@ import javax.persistence.Table;
 
 import com.example.entity.manytomany.User_App;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Data;
+ 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name="department")
 @Getter
-@Setter
+@Setter // @Data and Overrides of toString and hashcode throws StackOverflow
 public class Department {
 
 	@Id
@@ -34,16 +33,17 @@ public class Department {
 	@Column(name="name")
 	private String name;
 	
-	 
-	 
+
 	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.REFRESH) //or mappedby="department"
 	@JoinColumn(referencedColumnName="id")
 	private Set<Employee> employees = new HashSet();
 	/*
 	!! Lazy Initialization Exception
 	*/
-	// LAZY may be initialized by   
-	// Middle DTO Entity 
-	// Hibernate.Initialize
+	// LAZY may be initialized by 
+	@Override
+	public String toString() {
+		return this.name;
+	}
 	
 }
